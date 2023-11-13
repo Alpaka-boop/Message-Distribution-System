@@ -87,6 +87,7 @@ class MessangerAddressee(MessageDistributionSys, Addressee):
 class Display(MessageDistributionSys, Addressee):
     __output_stream = sys.stdout
     __message = ''
+    __output_color = 'white'
 
     def __init__(self, output_stream):
         self.__output_stream = output_stream
@@ -94,8 +95,12 @@ class Display(MessageDistributionSys, Addressee):
     def receive_message(self, message: Message):
         self.__message = message
 
-    def display(self, color='white'):
-        print(colored(self.__message.get_body(), color), file=self.__output_stream)
+    def display(self):
+        print(colored(self.__message.get_body(), self.__output_color), file=self.__output_stream)
 
     def clear_display(self):
         self.__message = ''
+
+    def set_color(self, color):
+        self.__output_color = color
+
