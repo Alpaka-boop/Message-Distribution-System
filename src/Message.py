@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class ImportanceLevel(Enum):
+class MessageImportanceLevel(Enum):
     SPAM = 0
     REGULAR = 1
     IMPORTANT = 2
@@ -11,7 +11,7 @@ class Message:
     __name = ''
     __body = ''
     __length = 0
-    __importance_level = ImportanceLevel.SPAM
+    __importance_level = MessageImportanceLevel.SPAM
 
     def __init__(self, name, body, importance_level):
         self.__name = name

@@ -47,13 +47,26 @@ class User(MessageDistributionSys, Addressee):
         self.log_message(message)
 
     def dump_message_by_end_index(self, index: int):
-        if index < 0:
-            index *= -1
-        print(self.__logged_messages[-index])
-        self.__logged_messages_status[-index] = MessagesStatus.READ
+        if index > 0:
+            raise RuntimeError("Index must be negative to dump from end")
+        print(self.__logged_messages[index])
+        self.mark_message_as_read_by_end_index(index)
+
+    def mark_message_as_read_by_end_index(self, index: int):
+        if index > 0:
+            raise RuntimeError("Index must be negative to dump from end")
+        self.__logged_messages_status[index] = MessagesStatus.READ
+
+    def delete_message_by_end_index(self, index: int):
+        if index > 0:
+            raise RuntimeError("Index must be negative to dump from end")
+        self.__logged_messages_char_num -= self.__logged_messages[index].get_length()
+        self.__logged_messages.pop(index)
+        self.__logged_messages_status.pop(index)
 
     def check_logged_mess_len(self):
         while self.__logged_messages_char_num > CONST_MAX_LOG_MES_CHAR_NUM:
+            self.__logged_messages_char_num -= self.__logged_messages[0].get_length()
             self.__logged_messages.pop(0)
             self.__logged_messages_status.pop(0)
 
@@ -83,3 +96,6 @@ class Display(MessageDistributionSys, Addressee):
 
     def display(self, color='white'):
         print(colored(self.__message.get_body(), color), file=self.__output_stream)
+
+    def clear_display(self):
+        self.__message = ''
